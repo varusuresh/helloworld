@@ -1,0 +1,98 @@
+package TestCase;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class infogreffe {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		// author name 
+		
+
+		System.setProperty("webdriver.chrome.driver", "C:\\Users\\Girish\\Downloads\\chromedriver_win32 (1)\\chromedriver.exe");
+		WebDriver driver = new ChromeDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
+		
+		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+			
+			driver.get("https://www.infogreffe.com/");
+			
+			WebDriverWait wait= new WebDriverWait(driver, 6000);
+			
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='phrase']")));
+			
+			driver.findElement(By.xpath("//input[@id='phrase']")).sendKeys("IMERYS");
+			driver.findElement(By.xpath("//*[@id=\"formRecherche\"]/input")).click();
+			
+			
+			wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector("span.troisiemePhrase"))));
+			String No_Of_Count=driver.findElement(By.cssSelector("span.troisiemePhrase")).getText();
+	
+			
+	String charecter=	No_Of_Count.substring(10, 11).trim();
+	int Rows=Integer.parseInt(charecter);
+			
+					
+	Utility.Xls_Reader reader=new Utility.Xls_Reader("C:\\Users\\Girish\\eclipse-workspace\\infogreffe\\src\\main\\java\\Data\\Flipcartdatafile.xlsx"); 
+	reader.addSheet("Extracted_Data");
+	reader.addColumn("Extracted_Data", "Company Name");
+	
+	reader.addColumn("Extracted_Data", "Address");
+			for(int i=1;i<=Rows;i++) {
+				//1st colun data 
+				String Beforexpath="//*[@id='dojox_grid__View_6']/div/div/div/div[";
+				String Afterxpath="]/table/tbody/tr/td[1]";
+				
+				String output=driver.findElement(By.xpath(Beforexpath+i+Afterxpath)).getText();
+				System.out.println(output);	
+				
+				reader.setCellData("Extracted_Data", "Company Name", i+1, output);
+				
+				
+			}
+			
+			for(int i=2;i<=Rows;i++) {
+				//2nd colun data 
+				String Beforexpath1="//*[@id=\'dojox_grid__View_6\']/div/div/div/div[1]/table/tbody/tr/td[";
+				String Afterxpath1="]";
+				
+				String output1=driver.findElement(By.xpath(Beforexpath1+i+Afterxpath1)).getText();
+				System.out.println(output1);	
+				reader.setCellData("Extracted_Data", "Address", i, output1);
+			}
+				
+			//}
+			
+
+			
+			//List<WebElement> list=driver.findElements(By.xpath("//*[@id=\"dojox_grid__View_6\"]/div/div/div/div[5]/table/tbody/tr/td[1]"));
+		//	System.out.println("size"+list.size());
+			
+			
+		
+		
+			
+			//Utility.Xls_Reader reader=new Utility.Xls_Reader("C:\\Users\\Girish\\eclipse-workspace\\infogreffe\\src\\main\\java\\Data\\Flipcartdatafile.xlsx"); 
+			
+			
+			
+				
+			}
+	}
+
+//}
+
+//}
